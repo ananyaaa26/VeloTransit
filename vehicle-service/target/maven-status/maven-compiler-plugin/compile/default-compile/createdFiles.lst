@@ -1,0 +1,9 @@
+com\example\transport\vehicle\controller\RouteController.class
+com\example\transport\vehicle\controller\VehicleController.class
+com\example\transport\vehicle\model\Route.class
+com\example\transport\vehicle\config\CorsConfig.class
+com\example\transport\vehicle\repository\RouteRepository.class
+com\example\transport\vehicle\VehicleServiceApplication.class
+com\example\transport\vehicle\repository\VehicleRepository.class
+com\example\transport\vehicle\config\CorsConfig$1.class
+com\example\transport\vehicle\model\Vehicle.class
