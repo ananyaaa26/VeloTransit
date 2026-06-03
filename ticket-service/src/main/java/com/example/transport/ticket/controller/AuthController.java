@@ -4,6 +4,7 @@ import com.example.transport.ticket.config.JwtUtil;
 import com.example.transport.ticket.model.User;
 import com.example.transport.ticket.repository.UserRepository;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,20 +34,20 @@ public class AuthController {
     }
 
     // Add this temporary method to your AuthController class
-    @GetMapping("/create-admin")
-    public String createAdminUser() {
-        // Check if the user already exists to avoid errors on multiple runs
-        if (userRepository.findByUsername("superadmin").isEmpty()) {
-            User adminUser = User.builder()
-                    .username("superadmin")
-                    .password(passwordEncoder.encode("password")) // Use the app's own encoder
-                    .role("ROLE_ADMIN")
-                    .build();
-            userRepository.save(adminUser);
-            return "New admin 'superadmin' created with password 'password'. You can now log in.";
-        }
-        return "Admin 'superadmin' already exists.";
-    }
+//    @GetMapping("/create-admin")
+//    public String createAdminUser() {
+//        // Check if the user already exists to avoid errors on multiple runs
+//        if (userRepository.findByUsername("superadmin").isEmpty()) {
+//            User adminUser = User.builder()
+//                    .username("superadmin")
+//                    .password(passwordEncoder.encode("password")) // Use the app's own encoder
+//                    .role("ROLE_ADMIN")
+//                    .build();
+//            userRepository.save(adminUser);
+//            return "New admin 'superadmin' created with password 'password'. You can now log in.";
+//        }
+//        return "Admin 'superadmin' already exists.";
+//    }
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody AuthRequest request) {
         try {

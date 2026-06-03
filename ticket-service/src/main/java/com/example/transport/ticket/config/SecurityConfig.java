@@ -34,13 +34,13 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Allow all HTML pages and static assets to be viewed by anyone
+                        // REMOVED "/create-admin" from this public list
                         .requestMatchers(
                                 "/", "/*.html", "/static/**",
                                 "/login", "/register"
                         ).permitAll()
 
-                        // Secure all other API endpoints (like booking a ticket)
+                        // Secure all other API endpoints
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

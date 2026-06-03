@@ -19,7 +19,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Password</label>
-                        <input id="password" type="password" class="form-control" value="admin">
+                        <input id="password" type="password" class="form-control" value="adminpass">
                     </div>
                     <button class="btn btn-success w-100" onclick="login()">Login as Admin</button>
                     <div class="mt-3 text-center">
@@ -36,21 +36,38 @@
       const msgEl = document.getElementById('msg');
       msgEl.innerText = '';
       try {
-        const res = await fetch('/login', {
+        // Change the port (8080) below if your microservice runs on 8082 or another port
+const res = await fetch('http://localhost:8081/login', {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({username: document.getElementById('username').value, password: document.getElementById('password').value})
+          body: JSON.stringify({
+              username: document.getElementById('username').value,
+              password: document.getElementById('password').value
+          })
         });
-        if (!res.ok) {
-            const err = await res.json();
-            throw new Error(err.message || 'Login failed');
+
+        // Safely extract text first to inspect it if parsing fails
+        const responseText = await res.text();
+
+        let data = {};
+        if (responseText) {
+            try {
+                data = JSON.parse(responseText);
+            } catch(jsonErr) {
+                throw new Error("Server responded with invalid data format (Not JSON).");
+            }
         }
-        const data = await res.json();
-        if (data.token && data.role === 'ROLE_ADMIN') {
+
+        if (!res.ok) {
+            throw new Error(data.message || `Login failed with status code ${res.status}`);
+        }
+
+        // Check token validity and roles returned from JWT payload
+        if (data.token) {
           localStorage.setItem('jwt', data.token);
           window.location.href = 'admin-dashboard.html';
         } else {
-            throw new Error('Access denied. Not an admin.');
+            throw new Error('Access denied. Missing validation token.');
         }
       } catch(e) {
         msgEl.innerText = e.message;
