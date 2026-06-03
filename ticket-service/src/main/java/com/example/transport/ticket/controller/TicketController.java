@@ -8,6 +8,7 @@ import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public class TicketController {
         }
 
         Ticket ticket = ticketOpt.get();
-        // Ensure the user owns this ticket (or is an admin)
+        // Ensure the user owns this ticket (or holds administrative privileges)
         if (!ticket.getUserId().equals(user.getId()) && !user.getRole().equals("ROLE_ADMIN")) {
             return ResponseEntity.status(403).body(Map.of("error", "Forbidden"));
         }

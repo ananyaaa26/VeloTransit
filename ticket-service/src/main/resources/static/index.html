@@ -40,19 +40,44 @@
     const msgEl = document.getElementById('msg');
     msgEl.innerText = '';
     try {
-      const res = await fetch('/login', {
+      // Directing explicitly to your running ticket-service backend instance
+      const res = await fetch('http://localhost:8081/login', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({username: document.getElementById('username').value, password: document.getElementById('password').value})
+        body: JSON.stringify({
+            username: document.getElementById('username').value,
+            password: document.getElementById('password').value
+        })
       });
-      if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.message || 'Login failed');
+
+      // 1. Intercept bad credentials right away before checking body format
+      if (res.status === 401) {
+          throw new Error('Wrong password or username!');
       }
-      const data = await res.json();
+
+      // 2. Read raw response text safely to avoid JSON structure parsing exceptions
+      const responseText = await res.text();
+      let data = {};
+
+      if (responseText) {
+          try {
+              data = JSON.parse(responseText);
+          } catch(jsonErr) {
+              throw new Error('Server responded with invalid data format.');
+          }
+      }
+
+      // 3. Catch all other network problems (like a 400 or 500 error)
+      if (!res.ok) {
+          throw new Error(data.message || `Login failed with status code ${res.status}`);
+      }
+
+      // 4. Handle token assignment and redirection smoothly
       if (data.token) {
         localStorage.setItem('jwt', data.token);
         window.location.href = 'search.html';
+      } else {
+          throw new Error('Access token missing from validation context.');
       }
     } catch(e) {
       msgEl.innerText = e.message;
