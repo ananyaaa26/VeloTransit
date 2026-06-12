@@ -1,4 +1,4 @@
-# Transport Ticket Booking System
+# VeloTransit
 
 A complete transport booking system built with a Java Spring Boot microservice architecture. This application provides a full end-to-end flow for users to register, log in, view available routes, and book tickets in real-time. It also features a separate admin dashboard for managing the vehicles and routes that power the system.
 
