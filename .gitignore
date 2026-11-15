@@ -11,3 +11,7 @@ target/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Local application configuration (contains database credentials)
+ticket-service/src/main/resources/application.properties
+vehicle-service/src/main/resources/application.properties
