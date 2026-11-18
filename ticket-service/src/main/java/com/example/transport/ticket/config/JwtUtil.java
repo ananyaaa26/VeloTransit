@@ -1,5 +1,5 @@
 package com.example.transport.ticket.config;
-
+import org.springframework.beans.factory.annotation.Value;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,8 +16,12 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
-    // A secure secret key. In a real app, this should be in application properties and much longer.
-    public static final String SECRET = "413F4428472B4B6250655368566D5970337336763979244226452948404D6351";
+    // JWT secret is injected securely through an environment variable.
+    private final String secret;
+
+    public JwtUtil(@Value("${JWT_SECRET}") String secret) {
+        this.secret = secret;
+    }
     private static final long EXPIRATION_TIME_MS = 1000 * 60 * 60 * 24; // 24 hours
 
     public String extractUsername(String token) {
@@ -67,7 +71,7 @@ public class JwtUtil {
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
